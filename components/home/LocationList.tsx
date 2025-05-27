@@ -1,7 +1,8 @@
 import { useSavedLocation } from "@/contexts/SavedLocationContext";
-import { FlatList, StyleSheet, View } from "react-native";
-import LocationCard from "../LocationCard";
-import { ThemedText } from "../ThemedText";
+import { StyleSheet, View } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import LocationCard from "../ui/LocationCard";
+import { ThemedText } from "../ui/ThemedText";
 
 export default function LocationList() {
   const { savedLocations } = useSavedLocation();
@@ -11,11 +12,12 @@ export default function LocationList() {
       <ThemedText type="subtitle" style={styles.title}>
         Saved Locations
       </ThemedText>
-      <FlatList
+      <Animated.FlatList
         data={savedLocations}
         renderItem={({ item }) => <LocationCard location={item} />}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
+        itemLayoutAnimation={LinearTransition}
       />
     </View>
   );
@@ -34,6 +36,8 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: 48,
-    gap: 16
+    gap: 16,
+    minHeight: 200,
+    paddingBottom: 32
   }
 });

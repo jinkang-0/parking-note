@@ -7,9 +7,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
+import Animated, { FadeIn, FadeOutUp } from "react-native-reanimated";
+import { IconSymbol } from "./IconSymbol";
 import ThemedButton from "./ThemedButton";
 import { ThemedText } from "./ThemedText";
-import { IconSymbol } from "./ui/IconSymbol";
 
 interface LocationCardProps {
   location: SavedLocation;
@@ -43,12 +44,14 @@ export default function LocationCard({ location }: LocationCardProps) {
   };
 
   return (
-    <View
+    <Animated.View
       style={{
         ...styles.cardContainer,
         borderColor: colors.border,
         backgroundColor: colors.card
       }}
+      entering={FadeIn}
+      exiting={FadeOutUp}
     >
       <View style={styles.infoContainer}>
         <View style={styles.infoBig}>
@@ -94,7 +97,7 @@ export default function LocationCard({ location }: LocationCardProps) {
           </View>
         </Link>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

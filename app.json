@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "parking-note",
+    "name": "Parking Note",
     "slug": "parking-note",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.ginkanj.parkingnote"
     },
     "web": {
       "bundler": "metro",
@@ -30,13 +31,24 @@
         {
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#F3F3F3",
+          "dark": {
+            "image": "./assets/images/splash-icon-dark.png",
+            "imageWidth": 200,
+            "backgroundColor": "#222222"
+          }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "08f9a84e-17fc-4948-8e3b-3a8e52808a89"
+      }
+    },
+    "owner": "ginkanj"
   }
 }

@@ -2,11 +2,12 @@ import { useLocation } from "@/contexts/LocationContext";
 import { useSavedLocation } from "@/contexts/SavedLocationContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { metersToFeet } from "@/lib/utils";
+import * as Haptics from "expo-haptics";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
-import ThemedButton from "../ThemedButton";
-import { ThemedText } from "../ThemedText";
 import { IconSymbol } from "../ui/IconSymbol";
+import ThemedButton from "../ui/ThemedButton";
+import { ThemedText } from "../ui/ThemedText";
 
 export default function ActionBar() {
   const colors = useThemeColors();
@@ -32,7 +33,13 @@ export default function ActionBar() {
       }}
     >
       {/* button */}
-      <ThemedButton style={styles.saveButton} onPress={handleSaveLocation}>
+      <ThemedButton
+        style={styles.saveButton}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          handleSaveLocation();
+        }}
+      >
         <IconSymbol name="star" color={colors.text} />
         <ThemedText type="default">Save Location</ThemedText>
       </ThemedButton>
