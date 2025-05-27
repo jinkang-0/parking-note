@@ -1,32 +1,34 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
+import { StyleSheet, Text, type TextProps } from "react-native";
 
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?: "default" | "light" | "medium" | "subtitle" | "link";
 };
 
 export function ThemedText({
   style,
   lightColor,
   darkColor,
-  type = 'default',
+  type = "default",
   ...rest
 }: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const colors = useThemeColors();
 
   return (
     <Text
       style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
+        { color: colors.text },
+        type === "default" ? styles.default : undefined,
+        type === "light"
+          ? { ...styles.default, color: colors.shadedText, fontWeight: 300 }
+          : undefined,
+        type === "medium" ? styles.medium : undefined,
+        type === "subtitle" ? styles.subtitle : undefined,
+        type === "link" ? styles.link : undefined,
+        style
       ]}
       {...rest}
     />
@@ -36,25 +38,21 @@ export function ThemedText({
 const styles = StyleSheet.create({
   default: {
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 24
   },
-  defaultSemiBold: {
+  medium: {
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
+    fontWeight: 500
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    textTransform: "uppercase",
+    width: "100%"
   },
   link: {
     lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
-  },
+    color: "#0a7ea4"
+  }
 });
