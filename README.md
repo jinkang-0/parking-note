@@ -6,4 +6,4 @@ This app is only tested on Android.
 
 ![Example Screen](./public/main.png)
 
-FYI, I do not live in the location shown above.
+FYI, I do not live in or near the location shown above.

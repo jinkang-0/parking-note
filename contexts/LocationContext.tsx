@@ -73,6 +73,12 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
           setLocation(newLocation);
         });
     })();
+
+    return () => {
+      if (watcher.current) {
+        watcher.current.remove();
+      }
+    }
   }, []);
 
   return (
