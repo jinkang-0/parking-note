@@ -5,3 +5,5 @@ After forgetting where I parked the gas-hungry machine one too many times, I dec
 This app is only tested on Android.
 
 ![Example Screen](./public/main.png)
+
+FYI, I do not live in the location shown above.
