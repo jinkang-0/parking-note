@@ -24,7 +24,8 @@ const MAPPING = {
   clock: "history",
   "mappin.circle": "location-on",
   "square.on.square": "content-copy",
-  "location.slash": "location-off"
+  "location.slash": "location-off",
+  "checkmark": "check"
 } as IconMapping;
 
 /**

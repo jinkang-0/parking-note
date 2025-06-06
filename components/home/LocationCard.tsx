@@ -4,9 +4,10 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { distanceLonLatMiles, formatTime, getMapLink } from "@/lib/utils";
 import { styleButton } from "@/styles/button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Clipboard from "expo-clipboard";
 import { Link } from "expo-router";
-import { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOutUp } from "react-native-reanimated";
 import { IconSymbol } from "../ui/IconSymbol";
 import ThemedButton from "../ui/ThemedButton";
@@ -20,6 +21,7 @@ export default function LocationCard({ location }: LocationCardProps) {
   const colors = useThemeColors();
   const { location: currentLocation } = useLocation();
   const { removeSavedLocation } = useSavedLocation();
+  const [copied, setCopied] = useState(false);
 
   const distanceInMiles = useMemo(() => {
     if (!currentLocation || !location) return null;
@@ -59,6 +61,31 @@ export default function LocationCard({ location }: LocationCardProps) {
           <ThemedText type="medium">
             {location.latitude}, {location.longitude}
           </ThemedText>
+          {copied ? (
+            <IconSymbol
+              name="checkmark"
+              color={colors.text}
+              size={20}
+              style={{ marginLeft: "auto" }}
+            />
+          ) : (
+            <Pressable
+              onPress={() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1000);
+                Clipboard.setStringAsync(
+                  `${location.latitude}, ${location.longitude}`
+                );
+              }}
+              style={{ marginLeft: "auto" }}
+            >
+              <IconSymbol
+                name="square.on.square"
+                color={colors.text}
+                size={20}
+              />
+            </Pressable>
+          )}
         </View>
         <View style={styles.info}>
           <IconSymbol size={20} name="ruler" color={colors.text} />
