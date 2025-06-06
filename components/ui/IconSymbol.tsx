@@ -23,7 +23,8 @@ const MAPPING = {
   ruler: "straighten",
   clock: "history",
   "mappin.circle": "location-on",
-  "square.on.square": "content-copy"
+  "square.on.square": "content-copy",
+  "location.slash": "location-off"
 } as IconMapping;
 
 /**

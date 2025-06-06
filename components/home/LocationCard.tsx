@@ -8,9 +8,9 @@ import { Link } from "expo-router";
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOutUp } from "react-native-reanimated";
-import { IconSymbol } from "./IconSymbol";
-import ThemedButton from "./ThemedButton";
-import { ThemedText } from "./ThemedText";
+import { IconSymbol } from "../ui/IconSymbol";
+import ThemedButton from "../ui/ThemedButton";
+import { ThemedText } from "../ui/ThemedText";
 
 interface LocationCardProps {
   location: SavedLocation;
@@ -83,8 +83,8 @@ export default function LocationCard({ location }: LocationCardProps) {
           type="small"
           onPress={handleDelete}
         >
-          <IconSymbol size={16} name="trash" color={colors.text} />
-          <ThemedText type="default">Delete</ThemedText>
+          <IconSymbol size={16} name="trash" color="#eee" />
+          <ThemedText type="action">Delete</ThemedText>
         </ThemedButton>
         <Link
           href={`https://${getMapLink(location.latitude, location.longitude)}`}
@@ -92,8 +92,8 @@ export default function LocationCard({ location }: LocationCardProps) {
           <View
             style={{ ...styleButton.buttonSmall, backgroundColor: colors.blue }}
           >
-            <IconSymbol size={16} name="scope" color={colors.text} />
-            <ThemedText type="default">Navigate</ThemedText>
+            <IconSymbol size={16} name="scope" color="#eee" />
+            <ThemedText type="action">Navigate</ThemedText>
           </View>
         </Link>
       </View>

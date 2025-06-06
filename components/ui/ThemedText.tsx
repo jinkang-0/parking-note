@@ -5,7 +5,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: "default" | "light" | "medium" | "subtitle" | "link";
+  type?: "default" | "light" | "medium" | "subtitle" | "link" | "action";
 };
 
 export function ThemedText({
@@ -25,6 +25,7 @@ export function ThemedText({
         type === "light"
           ? { ...styles.default, color: colors.shadedText, fontWeight: 300 }
           : undefined,
+        type === "action" ? styles.action : undefined,
         type === "medium" ? styles.medium : undefined,
         type === "subtitle" ? styles.subtitle : undefined,
         type === "link" ? styles.link : undefined,
@@ -39,6 +40,11 @@ const styles = StyleSheet.create({
   default: {
     fontSize: 16,
     lineHeight: 24
+  },
+  action: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#eee"
   },
   medium: {
     fontSize: 16,

@@ -1,21 +1,24 @@
 import {
-  getCurrentPositionAsync,
-  LocationAccuracy,
+  Accuracy,
+  getForegroundPermissionsAsync,
   LocationObject,
+  LocationSubscription,
   PermissionStatus,
-  requestForegroundPermissionsAsync
+  requestForegroundPermissionsAsync,
+  watchPositionAsync
 } from "expo-location";
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useRef,
   useState
 } from "react";
+import { AppState } from "react-native";
 
 interface LocationContextProps {
   location: LocationObject | null;
+  permissionStatus: PermissionStatus;
 }
 
 export const LocationContext = createContext<LocationContextProps | null>(null);
@@ -29,44 +32,51 @@ export const useLocation = () => {
 };
 
 export function LocationProvider({ children }: { children: React.ReactNode }) {
-  const permissionStatus = useRef<PermissionStatus>(
-    PermissionStatus.UNDETERMINED
-  );
+  const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
   const [location, setLocation] = useState<LocationObject | null>(null);
-
-  const updateLocation = useCallback(async () => {
-    if (permissionStatus.current !== PermissionStatus.GRANTED) {
-      const { status } = await requestForegroundPermissionsAsync();
-      permissionStatus.current = status;
-      if (status !== PermissionStatus.GRANTED) {
-        console.error("Permission to access location was denied");
-        return;
-      }
-    }
-
-    try {
-      const loc = await getCurrentPositionAsync({
-        accuracy: LocationAccuracy.Highest
-      });
-      setLocation(loc);
-    } catch (error) {
-      console.error("Error getting location:", error);
-    }
-  }, []);
+  const watcher = useRef<LocationSubscription | null>(null);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      updateLocation();
-    }, 1000); // Update location every second
+    // setup app state listener to handle app state changes
+    AppState.addEventListener("change", async () => {
+      const permission = await getForegroundPermissionsAsync();
+      setPermissionStatus(permission.status);
+      if (permission.status === PermissionStatus.GRANTED) {
+        // remove previous watcher if it exists
+        if (watcher.current)
+          watcher.current.remove();
 
-    // Initial location fetch
-    updateLocation();
+        // start watching position if permission is granted
+        watcher.current = await watchPositionAsync(
+          { accuracy: Accuracy.Highest, distanceInterval: 0 },
+          (newLocation) => {
+            setLocation(newLocation);
+          });
+      } else {
+        setLocation(null); // reset location if permission is not granted
+      }
+    });
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [updateLocation]);
+    // initialize location permission request
+    (async () => {
+      const { status } = await requestForegroundPermissionsAsync();
+      setPermissionStatus(status);
+
+      if (status !== PermissionStatus.GRANTED) {
+        return;
+      }
+
+      // if permission is granted, we can start watching the position
+      watcher.current = await watchPositionAsync(
+        { accuracy: Accuracy.Highest, distanceInterval: 0 },
+        (newLocation) => {
+          setLocation(newLocation);
+        });
+    })();
+  }, []);
 
   return (
-    <LocationContext.Provider value={{ location }}>
+    <LocationContext.Provider value={{ location, permissionStatus }}>
       {children}
     </LocationContext.Provider>
   );

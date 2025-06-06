@@ -3,15 +3,16 @@ import { useSavedLocation } from "@/contexts/SavedLocationContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { metersToFeet } from "@/lib/utils";
 import * as Haptics from "expo-haptics";
+import { PermissionStatus } from "expo-location";
 import { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { Linking, StyleSheet, View } from "react-native";
 import { IconSymbol } from "../ui/IconSymbol";
 import ThemedButton from "../ui/ThemedButton";
 import { ThemedText } from "../ui/ThemedText";
 
 export default function ActionBar() {
   const colors = useThemeColors();
-  const { location } = useLocation();
+  const { location, permissionStatus } = useLocation();
   const { addSavedLocation } = useSavedLocation();
 
   const handleSaveLocation = useCallback(async () => {
@@ -33,16 +34,31 @@ export default function ActionBar() {
       }}
     >
       {/* button */}
-      <ThemedButton
-        style={styles.saveButton}
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          handleSaveLocation();
-        }}
-      >
-        <IconSymbol name="star" color={colors.text} />
-        <ThemedText type="default">Save Location</ThemedText>
-      </ThemedButton>
+      {permissionStatus === PermissionStatus.DENIED ? (
+        <ThemedButton
+          style={styles.saveButton}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            Linking.openSettings();
+          }}
+        >
+          <IconSymbol name="location.slash" color={colors.text} />
+          <ThemedText type="default">
+            Enable Location Permission
+          </ThemedText>
+        </ThemedButton>
+      ) : (
+        <ThemedButton
+          style={styles.saveButton}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            handleSaveLocation();
+          }}
+        >
+          <IconSymbol name="star" color={colors.text} />
+          <ThemedText type="default">Save Location</ThemedText>
+        </ThemedButton>
+      )}
       <View style={styles.keyValueContainer}>
         <View style={styles.keyValueList}>
           <ThemedText type="medium">GPS Accuracy</ThemedText>

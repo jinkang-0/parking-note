@@ -1,8 +1,8 @@
 import { useSavedLocation } from "@/contexts/SavedLocationContext";
 import { StyleSheet, View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
-import LocationCard from "../ui/LocationCard";
 import { ThemedText } from "../ui/ThemedText";
+import LocationCard from "./LocationCard";
 
 export default function LocationList() {
   const { savedLocations } = useSavedLocation();
